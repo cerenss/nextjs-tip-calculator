@@ -1,8 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Calculator = () => {
     // TODO: start coding here!
+    const [totalBill, setTotalBill] = useState(0);
+    const [totalTipPercentage, setTotalTipPercentage] = useState(0);
+    const [numberOfPeople, setNumberOfPeople] = useState(0);
+    const [tipAmount, setTipAmount] = useState(0);
+    const [totalPrice, setTotalPrice] = useState(0);
 
+    const handleInputChange = (e) => {
+        const {name, value} = e.target;
+        switch (name) {
+            case 'totalBill':
+                setTotalBill(value);
+                console.log(value);
+                break;
+            case 'totalTipPercentage': {
+                setTotalTipPercentage(parseFloat(value));
+                break;
+            }
+            case 'numberOfPeople':
+                setNumberOfPeople(parseFloat(value));
+                break;
+            default:
+                break;
+        }
+    }
+
+    const handleCalculate = () => {
+        const tipAmountPerPerson = (totalBill * (totalTipPercentage / 100)) / numberOfPeople;
+        const initialPricePerPerson = totalBill / numberOfPeople;
+        const totalPricePerPerson = initialPricePerPerson + tipAmountPerPerson;
+
+        setTipAmount(tipAmountPerPerson);
+        setTotalPrice(totalPricePerPerson);
+
+        console.log(totalBill);
+    }
+
+    useEffect(() => {
+        handleCalculate();
+    }, [totalBill, totalTipPercentage, numberOfPeople])
+
+    const handleReset = () => {
+        setTotalBill(0);
+        setTotalTipPercentage(0);
+        setNumberOfPeople(0);
+        setTipAmount(0);
+        setTotalPrice(0);
+    }
     return (
         <main>
             <img
@@ -21,8 +67,10 @@ const Calculator = () => {
                             type="number"
                             className="body-l-text input-field"
                             placeholder="0"
-                            name="Total bill value"
+                            name="totalBill"
                             id="totalBill"
+                            value={totalBill}
+                            onChange={handleInputChange}
                         />
                     </div>
 
@@ -33,18 +81,18 @@ const Calculator = () => {
                                 valid</small>
                         </div>
                         <div className="input-tips-container">
-                            <button className="body-l-text input-tip" id="tip5">5%
+                            <button className="body-l-text input-tip" id="tip5" name='totalTipPercentage' value={5} onClick={handleInputChange}>5% 
                             </button>
-                            <button className="body-l-text input-tip" id="tip10">10%
+                            <button className="body-l-text input-tip" id="tip10" name='totalTipPercentage' value={10} onClick={handleInputChange}>10%
                             </button>
-                            <button className="body-l-text input-tip" id="tip15">15%
+                            <button className="body-l-text input-tip" id="tip15" name='totalTipPercentage' value={15} onClick={handleInputChange}>15%
                             </button>
-                            <button className="body-l-text input-tip" id="tip25">25%
+                            <button className="body-l-text input-tip" id="tip25" name='totalTipPercentage' value={25} onClick={handleInputChange}>25%
                             </button>
-                            <button className="body-l-text input-tip" id="tip50">50%
+                            <button className="body-l-text input-tip" id="tip50" name='totalTipPercentage' value={50} onClick={handleInputChange}>50%
                             </button>
                             <input type="number" className="body-l-text input-field" placeholder="Custom"
-                                   id="totalTipPercentage"></input>
+                                   id="totalTipPercentage" name='totalTipPercentage' value={totalTipPercentage} onChange={handleInputChange}></input>
                         </div>
                     </div>
 
@@ -58,8 +106,11 @@ const Calculator = () => {
                             type="number"
                             className="body-l-text input-field"
                             placeholder="0"
-                            name="Number of people"
+                            name="numberOfPeople"
+                            value={numberOfPeople}
+                            onChange={handleInputChange}
                             id="numberOfPeople"
+                            
 
                         />
                     </div>
@@ -70,16 +121,16 @@ const Calculator = () => {
                             <b className="body-text card-price-title">Tip Amount</b>
                             <p className="body-s-text card-price-subtitle">/ person</p>
                         </div>
-                        <strong className="strong-text card-price-value" id="tipAmount">$0.00</strong>
+                        <strong className="strong-text card-price-value" id="tipAmount">${tipAmount.toFixed(2)}</strong>
                     </section>
                     <section className="card-price-container">
                         <div>
                             <b className="body-text card-price-title">Total</b>
                             <p className="body-s-text card-price-subtitle">/ person</p>
                         </div>
-                        <strong className="strong-text card-price-value" id="totalPrice">$0.00</strong>
+                        <strong className="strong-text card-price-value" id="totalPrice">${totalPrice.toFixed(2)}</strong>
                     </section>
-                    <button className="btn btn-primary btn-reset">Reset</button>
+                    <button className="btn btn-primary btn-reset" onClick={handleReset}>Reset</button>
                 </div>
             </section>
         </main>
